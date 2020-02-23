@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+	<!-- _name must have same name as .py file but capitalise it. Shows on Menu this way-->
+	<_name>Gradient Save</_name>
+	<!-- id should be unique. Associates entered values with this menu -->
+	<id>id.artemtech.save_gradients</id>
+	<!-- mention a dependency here and will check for existence (optional)-->
+	<dependency type="executable" location="extensions">simplestyle.py</dependency>
+	<dependency type="executable" location="extensions">savegradients.py</dependency>
+	<!-- classify which menu it appears under - can be new name -->
+	<param name="name" _gui-text="Gradient Name" type="string"></param>
+	<effect>
+	<object-type>all</object-type>
+		<effects-menu>
+			<submenu _name="Color"/> <!-- which menu under Extensions -->
+		</effects-menu>
+	</effect>
+	<!-- py file again -->
+	<script>
+		<command reldir="extensions" interpreter="python">savegradients.py</command>
+	</script>
+</inkscape-extension>
