@@ -2,10 +2,10 @@
 Inkscape's extension for saving gradient for your next project
 
 ## How to Install
-Copy `savegradients.inx` and `savegradients.py` into Inkscape `extensions` folder,
+Copy `savegradients.inx` and `savegradients.py` into Inkscape `extensions` folder,  
 usually in `$HOME/.config/inkscape/extensions` for linux.
 
-Unable to find where is the `extensions` folder for your Inkscape installation? 
+Unable to find where is the `extensions` folder for your Inkscape installation?  
 you can check it from `Edit > Preferences > System` menu, then look at `User extensions` path in `System Info` section
 
 ## How to Use
@@ -14,5 +14,5 @@ you can check it from `Edit > Preferences > System` menu, then look at `User ext
 - Follow the instructions on `Help` Tab
 
 ## Status
-[x] Saving Gradient
-[ ] Load Gradient 
+- [x] Saving Gradient
+- [ ] Load Gradient 
