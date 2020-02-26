@@ -67,6 +67,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="margin_left">30</property>
+                        <property name="margin_top">10</property>
                         <property name="border_width">2</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">20</property>
@@ -74,7 +75,8 @@
                           <object class="GtkBox" id="save_gradient1">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="spacing">20</property>
+                            <property name="margin_top">10</property>
+                            <property name="spacing">18</property>
                             <child>
                               <object class="GtkDrawingArea" id="save_gradient_draw">
                                 <property name="width_request">150</property>
@@ -91,7 +93,7 @@
                             </child>
                             <child>
                               <object class="GtkEntry" id="save_gradient_name">
-                                <property name="width_request">250</property>
+                                <property name="width_request">325</property>
                                 <property name="height_request">42</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -166,12 +168,15 @@
                 <property name="height_request">100</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_bottom">10</property>
                 <property name="baseline_position">top</property>
                 <child>
                   <object class="GtkImage">
-                    <property name="width_request">128</property>
+                    <property name="width_request">55</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_left">30</property>
+                    <property name="margin_top">21</property>
                     <property name="stock">gtk-info</property>
                     <property name="icon_size">6</property>
                   </object>
@@ -186,8 +191,8 @@
                     <property name="width_request">250</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_right">50</property>
-                    <property name="margin_bottom">10</property>
+                    <property name="margin_right">30</property>
+                    <property name="margin_top">14</property>
                     <property name="label" translatable="yes">&lt;b&gt;Hint:&lt;/b&gt;
 Select at least one object  that use gradient color  in order to add those gradient to your library. Selected gradient object  will appear below. You can give a name for your gradients to help you recoginize it later.</property>
                     <property name="use_markup">True</property>
@@ -209,6 +214,7 @@ Select at least one object  that use gradient color  in order to add those gradi
                 <property name="can_focus">False</property>
                 <property name="margin_left">45</property>
                 <property name="margin_right">50</property>
+                <property name="margin_top">20</property>
                 <property name="margin_bottom">10</property>
                 <property name="spacing">100</property>
                 <child>
@@ -248,47 +254,9 @@ Select at least one object  that use gradient color  in order to add those gradi
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Save Gradient</property>
+            <property name="label" translatable="yes">Add New</property>
           </object>
           <packing>
-            <property name="tab_fill">False</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLayout">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="width_request">400</property>
-                <property name="height_request">300</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">&lt;b&gt;tebaaaaaaaaal&lt;/b&gt;
-&lt;i&gt;helllooooo&lt;/i&gt;
-&lt;u&gt;helllooooo&lt;/u&gt;
-&lt;s&gt;helllooooo&lt;/s&gt;
-&lt;span font="18"&gt;aaaiiiiih, &lt;b&gt;Tebal nihhh&lt;/b&gt;&lt;/span&gt;</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="x">26</property>
-                <property name="y">23</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child type="tab">
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Help Test</property>
-          </object>
-          <packing>
-            <property name="position">1</property>
             <property name="tab_fill">False</property>
           </packing>
         </child>
@@ -468,7 +436,114 @@ Select at least one object  that use gradient color  in order to add those gradi
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Load Gradient</property>
+            <property name="label" translatable="yes">Load or Remove</property>
+          </object>
+          <packing>
+            <property name="position">2</property>
+            <property name="tab_fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLayout">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="width_request">317</property>
+                <property name="height_request">300</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">&lt;span font="12"&gt;&lt;b&gt;Version 0.1.3&lt;/b&gt;&lt;/span&gt;</property>
+                <property name="use_markup">True</property>
+                <property name="wrap">True</property>
+              </object>
+              <packing>
+                <property name="x">137</property>
+                <property name="y">-84</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkImage">
+                <property name="width_request">100</property>
+                <property name="height_request">80</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="pixbuf">misc/icon.svg</property>
+              </object>
+              <packing>
+                <property name="x">10</property>
+                <property name="y">32</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="width_request">100</property>
+                <property name="height_request">80</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">&lt;span font="12"&gt;&lt;b&gt;Gradient Saver&lt;/b&gt;&lt;/span&gt;</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="x">69</property>
+                <property name="y">225</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="width_request">307</property>
+                <property name="height_request">80</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">&lt;span&gt;Gradient Saver is an extension for Inkscape that will help you to organize your favorite gradients. This extension created with love by &lt;a href="#"&gt;Sofyan&lt;/a&gt; &amp;amp; &lt;a href="https://raniaamina.id"&gt;Rania Amina&lt;/a&gt; and fully supported by Gimpscape ID Community. 
+
+Project Repository:
+&lt;a href="#"&gt;&lt;b&gt;https://github.com/artemtech/inkscape-gradient-saver&lt;/b&gt;&lt;/a&gt;&lt;/span&gt;</property>
+                <property name="use_markup">True</property>
+                <property name="wrap">True</property>
+              </object>
+              <packing>
+                <property name="x">243</property>
+                <property name="y">82</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButtonBox">
+                <property name="width_request">580</property>
+                <property name="height_request">32</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_right">20</property>
+                <property name="spacing">10</property>
+                <property name="layout_style">end</property>
+                <child>
+                  <object class="GtkButton">
+                    <property name="label" translatable="yes">Close</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="y">310</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child type="tab">
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">About</property>
           </object>
           <packing>
             <property name="position">2</property>
