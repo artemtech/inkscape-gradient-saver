@@ -5,14 +5,12 @@
 	<!-- id should be unique. Associates entered values with this menu -->
 	<id>id.artemtech.save_gradients</id>
 	<!-- mention a dependency here and will check for existence (optional)-->
-	<dependency type="executable" location="extensions">simplestyle.py</dependency>
 	<dependency type="executable" location="extensions">savegradients.py</dependency>
 	<!-- classify which menu it appears under - can be new name -->
-	<param name="name" _gui-text="Gradient Name" type="string"></param>
 	<effect>
 	<object-type>all</object-type>
 		<effects-menu>
-			<submenu _name="Color"/> <!-- which menu under Extensions -->
+			<submenu _name="Gradients"/> <!-- which menu under Extensions -->
 		</effects-menu>
 	</effect>
 	<!-- py file again -->
