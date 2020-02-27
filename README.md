@@ -1,8 +1,9 @@
-<p style="text-align: center">
-![Gradient Saver Logo](gradient_saver/icon.svg)
-**Gradient Saver**
+<p align="center" class="has-mb-6">
+<img class="not-gallery-item" height="128" src="/gradient_saver/icon.svg" alt="logo">
+<br><b>Gradient Saver</b></br>
+<br>
 Inkscape Gradient Manager for Your Next Project!
-</p>
+<br>
 
 # Gradient Saver
 An extension that will help you to organize your gradient on Inkscape. By using Gradient Saver you have ability to save your favorite gradient and reuse it on your next project. Hope it will help much Inkscpae user out there.
