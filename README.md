@@ -1,5 +1,11 @@
-# inkscape-gradient-saver
-Inkscape's extension for saving gradient for your next project
+<p style="text-align: center">
+![Gradient Saver Logo](gradient_saver/icon.svg)
+**Gradient Saver**
+Inkscape Gradient Manager for Your Next Project!
+</p>
+
+# Gradient Saver
+An extension that will help you to organize your gradient on Inkscape. By using Gradient Saver you have ability to save your favorite gradient and reuse it on your next project. Hope it will help much Inkscpae user out there.
 
 ## Dependencies
 - python-gi
@@ -21,3 +27,13 @@ you can check it from `Edit > Preferences > System` menu, then look at `User ext
 ## Status
 - [x] Saving Gradient
 - [ ] Load Gradient 
+
+## Contributor
+- [Sofyan Sugiyanto - sofyan@artemtech.id](mailto://sofyan@artemtech.id) (Programmer)
+- [Rania Amina - me@raniaamina.id ](https://raniaamina.id) (UI Designer)
+- [Hadiid Pratama - hddpratama@gmail.com](mailto://hddpratama@gmail.com) (Logo Contributor)
+
+This project fully supported by Gimpscape Indoensia (The Biggest Indonesia F/LOSS Design Community)
+
+## Disclaimer & Donation
+This is early development extension. We don't guarantee anything about this extension so please use at your own risk. If you feel helped by this extension, of course you can give us a cup of coffee :")
