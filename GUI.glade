@@ -31,7 +31,7 @@
   </object>
   <object class="GtkWindow" id="window">
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Inkscape Gradient Saver</property>
+    <property name="title" translatable="yes">Gradient Saver</property>
     <property name="resizable">False</property>
     <property name="window_position">center</property>
     <property name="default_width">600</property>
@@ -42,7 +42,7 @@
       <placeholder/>
     </child>
     <child>
-      <object class="GtkNotebook">
+      <object class="GtkNotebook" id="active_page">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <child>
@@ -119,7 +119,7 @@
                 </child>
               </object>
               <packing>
-                <property name="y">125</property>
+                <property name="y">130</property>
               </packing>
             </child>
             <child>
@@ -132,11 +132,12 @@
                 <property name="spacing">10</property>
                 <property name="layout_style">end</property>
                 <child>
-                  <object class="GtkButton" id="save_gradient_cancel">
+                  <object class="GtkButton" id="save_btn_cancel">
                     <property name="label" translatable="yes">Cancel</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <signal name="clicked" handler="onDestroy" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -145,11 +146,12 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="save_gradient_apply">
+                  <object class="GtkButton" id="save_btn_apply">
                     <property name="label" translatable="yes">Save</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <signal name="clicked" handler="onSaveGradientClicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -159,7 +161,7 @@
                 </child>
               </object>
               <packing>
-                <property name="y">310</property>
+                <property name="y">318</property>
               </packing>
             </child>
             <child>
@@ -214,7 +216,6 @@ Select at least one object  that use gradient color  in order to add those gradi
                 <property name="can_focus">False</property>
                 <property name="margin_left">45</property>
                 <property name="margin_right">50</property>
-                <property name="margin_top">20</property>
                 <property name="margin_bottom">10</property>
                 <property name="spacing">100</property>
                 <child>
@@ -429,7 +430,7 @@ Select at least one object  that use gradient color  in order to add those gradi
             </child>
           </object>
           <packing>
-            <property name="position">2</property>
+            <property name="position">1</property>
           </packing>
         </child>
         <child type="tab">
@@ -439,7 +440,7 @@ Select at least one object  that use gradient color  in order to add those gradi
             <property name="label" translatable="yes">Load or Remove</property>
           </object>
           <packing>
-            <property name="position">2</property>
+            <property name="position">1</property>
             <property name="tab_fill">False</property>
           </packing>
         </child>
@@ -517,11 +518,12 @@ Project Repository:
                 <property name="spacing">10</property>
                 <property name="layout_style">end</property>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="about_btn_close">
                     <property name="label" translatable="yes">Close</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <signal name="clicked" handler="onDestroy" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -531,7 +533,7 @@ Project Repository:
                 </child>
               </object>
               <packing>
-                <property name="y">310</property>
+                <property name="y">318</property>
               </packing>
             </child>
           </object>
@@ -547,6 +549,51 @@ Project Repository:
           </object>
           <packing>
             <property name="position">2</property>
+            <property name="tab_fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLayout">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <child>
+              <object class="GtkLabel" id="debug_text">
+                <property name="width_request">400</property>
+                <property name="height_request">120</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">label</property>
+                <property name="wrap">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="debug_btn_close">
+                <property name="label" translatable="yes">Close</property>
+                <property name="width_request">100</property>
+                <property name="height_request">36</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="onDestroy" swapped="no"/>
+              </object>
+              <packing>
+                <property name="x">300</property>
+                <property name="y">175</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child type="tab">
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Debug</property>
+          </object>
+          <packing>
+            <property name="position">3</property>
             <property name="tab_fill">False</property>
           </packing>
         </child>
