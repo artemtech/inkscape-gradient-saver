@@ -3,7 +3,6 @@
 
 # inkscape extension files
 import gettext
-from gi.repository import Gtk
 import inkex  # required
 import simplestyle
 
@@ -15,6 +14,7 @@ from lxml import etree
 
 import gi
 gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk
 
 _ = gettext.gettext
 
