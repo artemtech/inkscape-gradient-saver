@@ -18,7 +18,7 @@ from gi.repository import Gtk
 
 _ = gettext.gettext
 
-__version__ = '0.1.3'
+__version__ = '0.1.4'
 
 inkex.localize()
 
