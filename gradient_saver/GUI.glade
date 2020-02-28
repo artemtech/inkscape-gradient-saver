@@ -582,7 +582,7 @@ Project Repository:
         </child>
         <child>
           <object class="GtkLayout">
-            <property name="visible">True</property>
+            <property name="visible">False</property>
             <property name="can_focus">False</property>
             <child>
               <object class="GtkButton" id="debug_btn_close">
@@ -628,7 +628,7 @@ Project Repository:
         </child>
         <child type="tab">
           <object class="GtkLabel">
-            <property name="visible">True</property>
+            <property name="visible">False</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">Debug</property>
           </object>
