@@ -110,7 +110,7 @@ class MainWindow(Gtk.Builder):
 
         def on_draw(self, wid, cr, data):
             """
-            Calllback for draw signal.
+            Calllback for draw signal for rendering gradient.
             params:
                 - wid :GtkWidget
                 - cr :Cairo
@@ -171,14 +171,14 @@ class MainWindow(Gtk.Builder):
             status = save_to_file(gradient_to_save)
             if status == 0:
                 info = "Saving %d gradients, success!" % len(gradient_to_save)
+                # reload current document info with saved gradients
             elif status == 1:
                 info = "Nothing to save, there is no object with gradient selected. Exiting..."
             elif status == -1:
                 info = "Internal Error (-1)! "
             # showing popup information
             self.builder.get_object("information_text").set_text(info)
-            self.builder.information_dialog.set_title(
-                "Save Gradient Information")
+            self.builder.information_dialog.set_title("Save Gradient Information")
             self.builder.information_dialog.show_all()
 
         def onLoadGradientClicked(self, button):
@@ -204,7 +204,11 @@ class GradientSaver(inkex.Effect):
             self.tty = open("/dev/tty", 'w')
         except:
             self.tty = open(os.devnull, 'w')
-        self.gradients = []
+        self.doc_gradients = []
+    
+    def reload_current_gradients(self, new_gradient_info):
+        " reload gradients information in current project with stored gradient "
+        pass
 
     def get_gradients_data(self):
         selected_objects = self.selected
@@ -213,10 +217,8 @@ class GradientSaver(inkex.Effect):
             for item in selected_objects:
                 style = simplestyle.parseStyle(
                     selected_objects.get(item).attrib['style'])
-                fill = style["fill"][5:-
-                                     1] if "url" in style["fill"] else "None"
-                stroke = style["stroke"][5:-
-                                         1] if "url" in style["stroke"] else "None"
+                fill = style["fill"][5:-1] if "url" in style["fill"] else "None"
+                stroke = style["stroke"][5:-1] if "url" in style["stroke"] else "None"
                 if fill == "None" and stroke == "None":
                     continue
                 # read fill data
@@ -233,7 +235,6 @@ class GradientSaver(inkex.Effect):
                     real_stroke_node = self.getElementById(real_stroke)
                     if real_stroke_node not in gradient_list:
                         gradient_list.append(real_stroke_node)
-        data = []
         # read gradients data
         for gradient in gradient_list:
             # parse gradient stops
@@ -248,10 +249,10 @@ class GradientSaver(inkex.Effect):
                 opacity = style.get("stop-opacity")
                 stop_data.get("stops").append(
                     tuple([float(offset)] + [x/256.0 for x in color] + [float(opacity)]))
-            data.append(stop_data)
-        return data
+            self.doc_gradients.append(stop_data)
+        return self.doc_gradients
 
-    # called when the extension is run.
+    # called when the extension is running.
     def effect(self):
         try:
             app = MainWindow(self.get_gradients_data())
