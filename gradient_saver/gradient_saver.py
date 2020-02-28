@@ -22,21 +22,35 @@ __version__ = '0.1.3'
 
 inkex.localize()
 
-def create_new_file(name,data):
+def create_new_file(gradient_data):
     root = etree.Element("svg", nsmap=inkex.NSS)
     def_tree = etree.SubElement(root, "defs")
-    for idx,item in enumerate(data):
-        # parse gradient stops
-        if idx == len(data) - 1 :
-            gradient = etree.SubElement(def_tree, item.tag, attrib=item.attrib, id=name)
-        else:
-            gradient = etree.SubElement(def_tree, item.tag, attrib=item.attrib)
+    for item in gradient_data:
+        gradient = etree.SubElement(def_tree, item.tag, attrib=item.attrib)
         for gradient_stop in item:
-            new_stop = etree.SubElement(gradient,gradient_stop.tag, attrib=gradient_stop.attrib)
-    with open("my-gradients.svg", "w") as f:
+            new_stop = etree.SubElement(gradient, gradient_stop.tag, attrib=gradient_stop.attrib)
+    with open("../my-gradients.svg", "w") as f:
         f.write(etree.tostring(
             root, encoding="utf-8", xml_declaration=True))
 
+def save_to_file(data):
+    if os.path.exists("../my-gradients.svg"):
+        previous_data = load_gradients_from_file()
+        data = previous_data + data
+        create_new_file(data)
+    else:
+        create_new_file(data)
+
+def load_gradients_from_file():
+    if os.path.exists("../my-gradients.svg"):
+        with open("../my-gradients.svg", "r") as f:
+            root = etree.fromstring(f.read())
+        linearGradients = root.xpath("//svg:linearGradient",namespaces=inkex.NSS)
+        # radialGradients = root.findall("radialGradient")
+        mygradients = linearGradients
+    else:
+        mygradients = []
+    return mygradients
 
 class SaveGradientTemplate(Gtk.HBox):
     """
@@ -44,7 +58,7 @@ class SaveGradientTemplate(Gtk.HBox):
     and preview of selected object in the save page.
     """
     def __init__(self, gradient_data):
-        super(SaveGradientTemplate,self).__init__()
+        Gtk.HBox.__init__(self)
         self.gradient_data = gradient_data
         self.set_spacing(20)
         preview = Gtk.DrawingArea()
@@ -77,23 +91,24 @@ class SaveGradientTemplate(Gtk.HBox):
     def get_save_gradient_text(self):
         return self.input_entry.get_text()
 
-    def get_gradient_data(self):
-        data = []
+    def get_compiled_gradient(self, new_id):
+        # compiling gradient stops
+        root = etree.Element("linearGradient", id=new_id)
         for idx,stop in enumerate(self.gradient_data["stops"]):
             stop_id = self.get_name() + str(idx)
             offset = stop[0]
             color = simplestyle.formatColor3f(stop[1], stop[2], stop[3])
             opacity = stop[4]
-            tmp_data = {
+            tmp_stops = {
                 "id" : stop_id,
-                "offset" : offset,
+                "offset" : str(offset),
                 "style" : simplestyle.formatStyle({
                     "stop-color" : color,
-                    "stop-opacity" : opacity
+                    "stop-opacity" : str(opacity)
                 })
             }
-            data.append(tmp_data)
-        return data
+            current_stop = etree.SubElement(root, "stop", attrib=tmp_stops)
+        return root
 
 class Handler:
     def __init__(self, gtkbuilder):
@@ -104,15 +119,17 @@ class Handler:
 
     def onSaveGradientClicked(self, button):
         text = ""
+        gradient_to_save = []
         # get all gradient data in save_container
         for item in self.builder.save_container.get_children():
             # get new gradient name
             new_name_gradient = item.get_save_gradient_text()
             # get gradient data
-            gradient_data = item.get_gradient_data()
-            text += "Child {0} \n".format(gradient_data)
+            gradient_data = item.get_compiled_gradient(new_name_gradient)
+            text += "{0}\n-----\n".format(etree.tostring(gradient_data))
             self.builder.get_object("debug_text").set_text(text)
-        pass
+            gradient_to_save.append(gradient_data)
+        save_to_file(gradient_to_save)
 
 class SaveGradients(inkex.Effect):
     def __init__(self):
@@ -127,25 +144,6 @@ class SaveGradients(inkex.Effect):
                                      action="store", type="string",
                                      dest="name",
                                      help="Name for this Gradient")
-
-    def save_to_file(self, name, data):
-        if os.path.exists("my-gradients.svg"):
-            previous_data = self.load_gradients_from_file()
-            data = previous_data + data
-            create_new_file(name,data)
-        else:
-            create_new_file(name,data)
-
-    def load_gradients_from_file(self):
-        if os.path.exists("my-gradients.svg"):
-            with open("my-gradients.svg", "r") as f:
-                root = etree.fromstring(f.read())
-            linearGradients = root.xpath("//svg:linearGradient",namespaces=inkex.NSS)
-            # radialGradients = root.findall("radialGradient")
-            mygradients = linearGradients
-        else:
-            mygradients = []
-        return mygradients
 
     def get_gradients_data(self):
         selected_objects = self.selected
@@ -190,7 +188,7 @@ class SaveGradients(inkex.Effect):
     def effect(self):
         class MainWindow(Gtk.Builder):
             def __init__(self, gradients):
-                super(MainWindow,self).__init__()
+                Gtk.Builder.__init__(self)
                 self.add_from_file("GUI.glade")
                 self.window = self.get_object("window")
                 # parsing components
@@ -201,7 +199,6 @@ class SaveGradients(inkex.Effect):
                 for idx,item in enumerate(gradients):
                     new_save_template = SaveGradientTemplate(item)
                     new_save_template.set_name("gradient%d" % idx)
-                    # new_save_template.set_name("save_gradient%d"%item)
                     self.save_container.add(new_save_template)
                 ## - end save gradient components
                 # show the GUI
