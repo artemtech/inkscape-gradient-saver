@@ -52,86 +52,108 @@ def load_gradients_from_file():
         mygradients = []
     return mygradients
 
-class SaveGradientTemplate(Gtk.HBox):
-    """
-    Template for generating gradient name 
-    and preview of selected object in the save page.
-    """
-    def __init__(self, gradient_data):
-        Gtk.HBox.__init__(self)
-        self.gradient_data = gradient_data
-        self.set_spacing(20)
-        preview = Gtk.DrawingArea()
-        preview.set_size_request(150,42)
-        preview.set_app_paintable(True)
-        preview.connect("draw",self.on_draw, gradient_data)
-        self.pack_start(preview,False,True,0)
-        self.input_entry = Gtk.Entry()
-        self.input_entry.set_placeholder_text("e.g Beautiful Color")
-        self.input_entry.set_size_request(250,42)
-        self.input_entry.set_text(gradient_data.get("id"))
-        self.input_entry.set_max_length(25)
-        self.pack_start(self.input_entry,False,True,1)
 
-    def on_draw(self, wid, cr, data):
+class MainWindow(Gtk.Builder):
+    def __init__(self, gradients):
+        Gtk.Builder.__init__(self)
+        self.add_from_file("GUI.glade")
+        self.window = self.get_object("window")
+        # parsing components
+        ## save gradient components
+        self.save_container = self.get_object("save_gradients_container")
+        save_template = self.get_object("save_gradient1")
+        self.save_container.remove(save_template)
+        for idx,item in enumerate(gradients):
+            new_save_template = SaveGradientTemplate(item)
+            new_save_template.set_name("gradient%d" % idx)
+            self.save_container.add(new_save_template)
+        ## - end save gradient components
+        # show the GUI
+        self.connect_signals(Handler(self))
+        self.window.show_all()
+
+    class SaveGradientTemplate(Gtk.HBox):
         """
-        Calllback for draw signal.
-        params:
-            - wid :GtkWidget
-            - cr :Cairo
-            - data :list -> gradient data
+        Template for generating gradient name 
+        and preview of selected object in the save page.
         """
-        lg = cairo.LinearGradient(0.0, 20.0, 150.0, 20.0)
-        for stop in data["stops"]:
-            lg.add_color_stop_rgba(stop[0] ,stop[1], stop[2], stop[3], stop[4])
-        cr.rectangle(10.0, 0.0, 150.0, 42.0)
-        cr.set_source(lg)
-        cr.fill()
-    
-    def get_save_gradient_text(self):
-        return self.input_entry.get_text()
+        def __init__(self, gradient_data):
+            Gtk.HBox.__init__(self)
+            self.gradient_data = gradient_data
+            self.set_spacing(20)
+            preview = Gtk.DrawingArea()
+            preview.set_size_request(150,42)
+            preview.set_app_paintable(True)
+            preview.connect("draw",self.on_draw, gradient_data)
+            self.pack_start(preview,False,True,0)
+            self.input_entry = Gtk.Entry()
+            self.input_entry.set_placeholder_text("e.g Beautiful Color")
+            self.input_entry.set_size_request(250,42)
+            self.input_entry.set_text(gradient_data.get("id"))
+            self.input_entry.set_max_length(25)
+            self.pack_start(self.input_entry,False,True,1)
 
-    def get_compiled_gradient(self, new_id):
-        # compiling gradient stops
-        root = etree.Element("linearGradient", id=new_id)
-        for idx,stop in enumerate(self.gradient_data["stops"]):
-            stop_id = self.get_name() + str(idx)
-            offset = stop[0]
-            color = simplestyle.formatColor3f(stop[1], stop[2], stop[3])
-            opacity = stop[4]
-            tmp_stops = {
-                "id" : stop_id,
-                "offset" : str(offset),
-                "style" : simplestyle.formatStyle({
-                    "stop-color" : color,
-                    "stop-opacity" : str(opacity)
-                })
-            }
-            current_stop = etree.SubElement(root, "stop", attrib=tmp_stops)
-        return root
+        def on_draw(self, wid, cr, data):
+            """
+            Calllback for draw signal.
+            params:
+                - wid :GtkWidget
+                - cr :Cairo
+                - data :list -> gradient data
+            """
+            lg = cairo.LinearGradient(0.0, 20.0, 150.0, 20.0)
+            for stop in data["stops"]:
+                lg.add_color_stop_rgba(stop[0] ,stop[1], stop[2], stop[3], stop[4])
+            cr.rectangle(10.0, 0.0, 150.0, 42.0)
+            cr.set_source(lg)
+            cr.fill()
+        
+        def get_save_gradient_text(self):
+            return self.input_entry.get_text()
 
-class Handler:
-    def __init__(self, gtkbuilder):
-        self.builder = gtkbuilder
+        def get_compiled_gradient(self, new_id):
+            # compiling gradient stops
+            root = etree.Element("linearGradient", id=new_id)
+            for idx,stop in enumerate(self.gradient_data["stops"]):
+                stop_id = self.get_name() + str(idx)
+                offset = stop[0]
+                color = simplestyle.formatColor3f(stop[1], stop[2], stop[3])
+                opacity = stop[4]
+                tmp_stops = {
+                    "id" : stop_id,
+                    "offset" : str(offset),
+                    "style" : simplestyle.formatStyle({
+                        "stop-color" : color,
+                        "stop-opacity" : str(opacity)
+                    })
+                }
+                current_stop = etree.SubElement(root, "stop", attrib=tmp_stops)
+            return root
 
-    def onDestroy(self, *args):
-        Gtk.main_quit()
+    class Handler:
+        def __init__(self, gtkbuilder):
+            self.builder = gtkbuilder
 
-    def onSaveGradientClicked(self, button):
-        text = ""
-        gradient_to_save = []
-        # get all gradient data in save_container
-        for item in self.builder.save_container.get_children():
-            # get new gradient name
-            new_name_gradient = item.get_save_gradient_text()
-            # get gradient data
-            gradient_data = item.get_compiled_gradient(new_name_gradient)
-            text += "{0}\n-----\n".format(etree.tostring(gradient_data))
-            self.builder.get_object("debug_text").set_text(text)
-            gradient_to_save.append(gradient_data)
-        save_to_file(gradient_to_save)
+        def onDestroy(self, *args):
+            Gtk.main_quit()
 
-class SaveGradients(inkex.Effect):
+        def onSaveGradientClicked(self, button):
+            text = ""
+            gradient_to_save = []
+            # get all gradient data in save_container
+            for item in self.builder.save_container.get_children():
+                # get new gradient name
+                new_name_gradient = item.get_save_gradient_text()
+                # get gradient data
+                gradient_data = item.get_compiled_gradient(new_name_gradient)
+                text += "{0}\n-----\n".format(etree.tostring(gradient_data))
+                self.builder.get_object("debug_text").set_text(text)
+                gradient_to_save.append(gradient_data)
+            save_to_file(gradient_to_save)
+
+
+
+class GradientSaver(inkex.Effect):
     def __init__(self):
         " define how the options are mapped from the inx file "
         inkex.Effect.__init__(self)  # initialize the super class
@@ -186,28 +208,6 @@ class SaveGradients(inkex.Effect):
 
     # called when the extension is run.
     def effect(self):
-        class MainWindow(Gtk.Builder):
-            def __init__(self, gradients):
-                Gtk.Builder.__init__(self)
-                self.add_from_file("GUI.glade")
-                self.window = self.get_object("window")
-                # parsing components
-                ## save gradient components
-                self.save_container = self.get_object("save_gradients_container")
-                save_template = self.get_object("save_gradient1")
-                self.save_container.remove(save_template)
-                for idx,item in enumerate(gradients):
-                    new_save_template = SaveGradientTemplate(item)
-                    new_save_template.set_name("gradient%d" % idx)
-                    self.save_container.add(new_save_template)
-                ## - end save gradient components
-                # show the GUI
-                self.connect_signals(Handler(self))
-                self.window.show_all()
-        # if len(self.selected) > 5 or len(self.selected) <= 0:
-        #     inkex.debug("Please select max 5 objects with gradient")
-        #     return
-        # else:
         try:
             app = MainWindow(self.get_gradients_data())
             Gtk.main()
@@ -215,40 +215,8 @@ class SaveGradients(inkex.Effect):
             import traceback
             inkex.debug(e)
             inkex.debug(traceback.print_exc())
-            # for item in self.selected:
-            #     style = simplestyle.parseStyle(self.selected.get(item).attrib['style'])
-            #     fill = style["fill"][5:-1] if "url" in style["fill"] else "None"
-            #     stroke = style["stroke"][5:-1] if "url" in style["stroke"] else "None"
-            #     if fill == "None" and stroke == "None":
-            #         inkex.debug("There is no gradient applied in current selected object")
-            #         return
-            #     # read radialgradient real data:
-            #     if "radialGradient" in fill:
-            #         real_fill = self.getElementById(fill).attrib["{"+inkex.NSS["xlink"]+"}href"][1:]
-            #         real_fill_node = self.getElementById(real_fill)
-            #         if real_fill_node not in self.gradients:
-            #             self.gradients.append(real_fill_node)
-            #     elif "linearGradient" in fill:
-            #         fill_node = self.getElementById(fill)
-            #         if fill_node not in self.gradients:
-            #             self.gradients.append(fill_node)
-            #     if "radialGradient" in stroke:
-            #         real_stroke = self.getElementById(stroke).attrib["{"+inkex.NSS["xlink"]+"}href"][1:]
-            #         real_stroke_node = self.getElementById(real_stroke_node)
-            #         if real_stroke_node not in self.gradients:
-            #             self.gradients.append(real_stroke_node)
-            #     elif "linearGradient" in stroke:
-            #         stroke_node = self.getElementById(stroke)
-            #         if stroke_node not in self.gradients:
-            #             self.gradients.append(stroke_node)
-            # try:
-            #     self.save_to_file(self.options.name, self.gradients)
-            #     inkex.debug("%d gradient saved successfully!" %
-            #                 len(self.gradients))
-            # except Exception as e:
-            #     inkex.debug(e.with_traceback())
 
 
 if __name__ == '__main__':
-    e = SaveGradients()
+    e = GradientSaver()
     e.affect()

@@ -30,7 +30,7 @@ you can check it from `Edit > Preferences > System` menu, then look at `User ext
 - [ ] Load Gradient 
 
 ## Contributor
-- [Sofyan Sugiyanto - sofyan@artemtech.id](mailto://sofyan@artemtech.id) (Programmer)
+- [Sofyan Sugianto - sofyan@artemtech.id](mailto://sofyan@artemtech.id) (Programmer)
 - [Rania Amina - me@raniaamina.id ](https://raniaamina.id) (UI Designer)
 - [Hadiid Pratama - hddpratama@gmail.com](mailto://hddpratama@gmail.com) (Logo Contributor)
 
