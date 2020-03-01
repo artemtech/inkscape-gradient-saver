@@ -35,6 +35,7 @@
       <object class="GtkNotebook" id="active_page">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
+        <signal name="switch-page" handler="onSwitchPage" swapped="no"/>
         <child>
           <object class="GtkLayout">
             <property name="visible">True</property>
@@ -313,6 +314,7 @@ Select at least one object  that use gradient color  in order to add those gradi
                     <property name="width_request">55</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_left">30</property>
                     <property name="margin_top">21</property>
                     <property name="stock">gtk-info</property>
                     <property name="icon_size">6</property>
@@ -328,6 +330,7 @@ Select at least one object  that use gradient color  in order to add those gradi
                     <property name="width_request">250</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_right">30</property>
                     <property name="margin_top">14</property>
                     <property name="label" translatable="yes">&lt;b&gt;Hint:&lt;/b&gt;
 Select at least one object  that use gradient color  in order to add those gradient to your library. Selected gradient object  will appear below. You can give a name for your gradients to help you recoginize it later.</property>
@@ -382,70 +385,79 @@ Select at least one object  that use gradient color  in order to add those gradi
                     <property name="can_focus">False</property>
                     <property name="shadow_type">none</property>
                     <child>
-                      <object class="GtkBox" id="load_gradients_container">
+                      <object class="GtkFlowBox" id="load_gradients_container">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="margin_top">10</property>
-                        <property name="border_width">2</property>
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">20</property>
+                        <property name="valign">start</property>
+                        <property name="margin_left">10</property>
+                        <property name="margin_right">10</property>
+                        <property name="column_spacing">30</property>
+                        <property name="row_spacing">10</property>
+                        <property name="min_children_per_line">2</property>
+                        <property name="max_children_per_line">2</property>
+                        <property name="selection_mode">none</property>
+                        <property name="activate_on_single_click">False</property>
                         <child>
-                          <object class="GtkBox" id="load_gradient1">
+                          <object class="GtkFlowBoxChild" id="load_gradient1">
+                            <property name="width_request">60</property>
+                            <property name="height_request">42</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="margin_top">10</property>
-                            <property name="spacing">18</property>
+                            <property name="can_focus">True</property>
+                            <property name="halign">start</property>
+                            <property name="valign">start</property>
                             <child>
-                              <object class="GtkCheckButton" id="load_gradient_select">
+                              <object class="GtkBox">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="draw_indicator">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="spacing">5</property>
+                                <property name="baseline_position">top</property>
                                 <child>
-                                  <placeholder/>
+                                  <object class="GtkCheckButton" id="load_gradient_select">
+                                    <property name="height_request">42</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkDrawingArea" id="load_gradient_draw">
+                                    <property name="width_request">100</property>
+                                    <property name="height_request">42</property>
+                                    <property name="visible">True</property>
+                                    <property name="app_paintable">True</property>
+                                    <property name="can_focus">False</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="load_gradient_text">
+                                    <property name="height_request">42</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="label" translatable="yes">ijo trans</property>
+                                    <property name="wrap">True</property>
+                                    <property name="wrap_mode">char</property>
+                                    <property name="max_width_chars">25</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">2</property>
+                                  </packing>
                                 </child>
                               </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkDrawingArea" id="load_gradient_draw">
-                                <property name="width_request">150</property>
-                                <property name="height_request">42</property>
-                                <property name="visible">True</property>
-                                <property name="app_paintable">True</property>
-                                <property name="can_focus">False</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkEntry" id="load_gradient_name">
-                                <property name="width_request">325</property>
-                                <property name="height_request">42</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="max_length">25</property>
-                                <property name="placeholder_text" translatable="yes">e.g Beautiful Color</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">2</property>
-                              </packing>
                             </child>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="position">1</property>
-                          </packing>
                         </child>
                       </object>
                     </child>
@@ -582,7 +594,6 @@ Project Repository:
         </child>
         <child>
           <object class="GtkLayout">
-            <property name="visible">False</property>
             <property name="can_focus">False</property>
             <child>
               <object class="GtkButton" id="debug_btn_close">
@@ -628,7 +639,6 @@ Project Repository:
         </child>
         <child type="tab">
           <object class="GtkLabel">
-            <property name="visible">False</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">Debug</property>
           </object>
