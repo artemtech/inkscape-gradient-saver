@@ -27,7 +27,7 @@ you can check it from `Edit > Preferences > System` menu, then look at `User ext
 
 ## Status
 - [x] Saving Gradient
-- [ ] Load Gradient 
+- [x] Load Gradient 
 
 ## Contributor
 - [Sofyan Sugianto - sofyan@artemtech.id](mailto://sofyan@artemtech.id) (Programmer)
