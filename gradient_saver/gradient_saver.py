@@ -54,6 +54,8 @@ def save_to_file(data):
             return -1
 
 
+
+
 def load_gradients_from_file():
     """ Load gradients from saved gradient, returned as List """
     if os.path.exists("../my-gradients.svg"):
@@ -84,6 +86,8 @@ class MainWindow(Gtk.Builder):
         self.gradientSaver = gradientSaver
         self.add_from_file("GUI.glade")
         self.window = self.get_object("window")
+        self.app_version = self.get_object("extension_version")
+        self.app_version.set_label(self.app_version.get_label().replace("$VERSION",__version__))
         self.information_dialog = self.get_object("information_dialog")
         # parsing components
         # save gradient components
@@ -230,7 +234,6 @@ class MainWindow(Gtk.Builder):
                 loaded_gradients = load_gradients_from_file()
                 # TODO render with disabled checkbox if it already exists in current project doc
                 for idx,gradient in enumerate(loaded_gradients):
-                    # inkex.debug(etree.tostring(gradient))
                     # parse gradient stops
                     stop_data = read_stop_gradient(gradient)
                     gradient_info = self.main_window.LoadGradientTemplate(stop_data)
@@ -254,7 +257,6 @@ class MainWindow(Gtk.Builder):
                 # get gradient data
                 gradient_data = item.get_compiled_gradient(new_name_gradient)
                 text += "{0}\n-----\n".format(etree.tostring(gradient_data))
-                self.main_window.get_object("debug_text").set_text(text)
                 gradient_to_save.append(gradient_data)
             # save to file
             status = save_to_file(gradient_to_save)
@@ -290,7 +292,16 @@ class MainWindow(Gtk.Builder):
             self.main_window.information_dialog.show_all()
 
         def onRemoveGradientClicked(self, button):
-            self.main_window.get_object("information_text").set_text("Clicked from Remove Gradient")
+            loaded_gradients = load_gradients_from_file()
+            if len(self.main_window.gradients_to_load) > 0:
+                gradient_to_remove = [gradient.attrib["id"] for gradient in self.main_window.gradients_to_load]
+                new_gradient_after = [gradient for gradient in loaded_gradients if gradient.attrib["id"] not in gradient_to_remove]
+                create_new_file(new_gradient_after)
+                teks = "Successfully removing these gradients:\n"
+                teks += "".join(["- "+gradient+"\n" for gradient in gradient_to_remove])
+            else:
+                teks = "No gradient(s) selected to load. Exiting..."
+            self.main_window.get_object("information_text").set_text(teks)
             self.main_window.information_dialog.set_title("Remove Gradient Information")
             self.main_window.information_dialog.show_all()
 
