@@ -64,6 +64,19 @@ def load_gradients_from_file():
         mygradients = []
     return mygradients
 
+def read_stop_gradient(gradient):
+    stop_data = {
+        "id": gradient.attrib.get("id"),
+        "stops": []
+    }
+    for stop in gradient:
+        offset = stop.attrib.get("offset")
+        style = simplestyle.parseStyle(stop.attrib['style'])
+        color = simplestyle.parseColor(style.get("stop-color"))
+        opacity = style.get("stop-opacity")
+        stop_data.get("stops").append(
+            tuple([float(offset)] + [x/256.0 for x in color] + [float(opacity)]))
+    return stop_data
 
 class MainWindow(Gtk.Builder):
     def __init__(self, gradientSaver):
@@ -77,12 +90,17 @@ class MainWindow(Gtk.Builder):
         self.save_container = self.get_object("save_gradients_container")
         save_template = self.get_object("save_gradient1")
         self.save_container.remove(save_template)
-        for idx, item in enumerate(self.gradientSaver.doc_gradients):
+        for idx, item in enumerate(self.gradientSaver.doc_selected_gradients):
             new_save_template = self.SaveGradientTemplate(item)
             new_save_template.set_name("gradient%d" % idx)
             self.save_container.add(new_save_template)
             self.save_container.show_all()
         # - end save gradient components
+        # load gradient components
+        self.load_container = self.get_object("load_gradients_container")
+        load_template = self.get_object("load_gradient1")
+        self.load_container.remove(load_template)
+        # - end load gradient components
         # show the GUI
         self.connect_signals(self.Handler(self))
         self.window.show()
@@ -147,20 +165,87 @@ class MainWindow(Gtk.Builder):
                 current_stop = etree.SubElement(root, "stop", attrib=tmp_stops)
             return root
 
+    class LoadGradientTemplate(Gtk.FlowBoxChild):
+        """
+        Template for generating gradient name 
+        and preview of saved gradient in the load page.
+        """
+        def __init__(self, gradient_data):
+            Gtk.FlowBoxChild.__init__(self)
+            self.gradient_data = gradient_data
+            self.set_size_request(60,32)
+            self.set_halign(Gtk.Align.START)
+            self.set_valign(Gtk.Align.START)
+            container = Gtk.HBox()
+            container.set_spacing(5)
+            container.set_baseline_position(Gtk.BaselinePosition.TOP)
+            self.checkbox = Gtk.CheckButton()
+            self.checkbox.draw_indicator = True
+            container.pack_start(self.checkbox,False,True,0)
+            preview = Gtk.DrawingArea()
+            preview.set_size_request(100, 32)
+            preview.set_app_paintable(True)
+            preview.connect("draw", self.on_draw, gradient_data)
+            container.pack_start(preview,False,True,0)
+            self.text_gradient = Gtk.Label()
+            self.text_gradient.set_text(gradient_data.get("id"))
+            self.text_gradient.set_line_wrap(True)
+            self.text_gradient.set_line_wrap_mode(1)
+            self.text_gradient.set_max_width_chars(25)
+            container.pack_start(self.text_gradient,False,True,0)
+            self.add(container)
+        
+        def on_draw(self, wid, cr, data):
+            """
+            Calllback for draw signal for rendering gradient.
+            params:
+                - wid :GtkWidget
+                - cr :Cairo
+                - data :list -> gradient data
+            """
+            lg = cairo.LinearGradient(0.0, 20.0, 100.0, 20.0)
+            for stop in data["stops"]:
+                lg.add_color_stop_rgba(
+                    stop[0], stop[1], stop[2], stop[3], stop[4])
+            cr.rectangle(10.0, 0.0, 110.0, 32.0)
+            cr.set_source(lg)
+            cr.fill()
+
     class Handler:
         """ Signal Handler for GUI """
 
-        def __init__(self, gtkbuilder):
-            self.builder = gtkbuilder
+        def __init__(self, main_window):
+            self.main_window = main_window
 
         def onDestroy(self, *args):
             Gtk.main_quit()
+        
+        def onSwitchPage(self, notebook, page, page_num):
+            if page_num == 0: # save tab
+                pass
+            elif page_num == 1: # load/remove tab
+                self.main_window.gradients_to_load = []
+                for children in self.main_window.load_container.get_children():
+                    self.main_window.load_container.remove(children)
+                loaded_gradients = load_gradients_from_file()
+                # TODO render with disabled checkbox if it already exists in current project doc
+                for idx,gradient in enumerate(loaded_gradients):
+                    # inkex.debug(etree.tostring(gradient))
+                    # parse gradient stops
+                    stop_data = read_stop_gradient(gradient)
+                    gradient_info = self.main_window.LoadGradientTemplate(stop_data)
+                    gradient_info.checkbox.connect("toggled",self.onLoadGradientToggled, gradient)
+                    gradient_info.set_name("gradient%d" % idx)
+                    self.main_window.load_container.add(gradient_info)
+                self.main_window.load_container.show_all()
+            else:
+                pass
 
         def onSaveGradientClicked(self, button):
             text = ""
             gradient_to_save = []
             # get all gradient data in save_container
-            for item in self.builder.save_container.get_children():
+            for item in self.main_window.save_container.get_children():
                 # get new gradient name
                 new_name_gradient = item.get_save_gradient_text()
                 # strip all special chars
@@ -169,32 +254,45 @@ class MainWindow(Gtk.Builder):
                 # get gradient data
                 gradient_data = item.get_compiled_gradient(new_name_gradient)
                 text += "{0}\n-----\n".format(etree.tostring(gradient_data))
-                self.builder.get_object("debug_text").set_text(text)
+                self.main_window.get_object("debug_text").set_text(text)
                 gradient_to_save.append(gradient_data)
             # save to file
             status = save_to_file(gradient_to_save)
             if status == 0:
                 info = "%d gradients saved successfully!" % len(gradient_to_save)
                 # reload current document info with saved gradients
-                self.builder.gradientSaver.reload_current_gradients(gradient_to_save)
+                self.main_window.gradientSaver.reload_current_gradients(gradient_to_save)
             elif status == 1:
                 info = "Nothing to save, there is no object with gradient selected. Exiting..."
             elif status == -1:
                 info = "Internal Error (-1)! "
             # showing popup information
-            self.builder.get_object("information_text").set_text(info)
-            self.builder.information_dialog.set_title("Save Gradient Information")
-            self.builder.information_dialog.show_all()
+            self.main_window.get_object("information_text").set_text(info)
+            self.main_window.information_dialog.set_title("Save Gradient Information")
+            self.main_window.information_dialog.show_all()
+        
+        def onLoadGradientToggled(self, togglebutton, gradient):
+            # if active, queue gradient, otherwise pop it
+            if togglebutton.get_active():
+                self.main_window.gradients_to_load.append(gradient)
+            else:
+                self.main_window.gradients_to_load.remove(gradient)
 
         def onLoadGradientClicked(self, button):
-            self.builder.get_object("information_text").set_text("Clicked from Load Gradient")
-            self.builder.information_dialog.set_title("Load Gradient Information")
-            self.builder.information_dialog.show_all()
+            if len(self.main_window.gradients_to_load) > 0:
+                self.main_window.gradientSaver.insert_new_gradients_to_current_doc(self.main_window.gradients_to_load)
+                teks = "Successfully loading these gradients:\n"
+                teks += "".join(["- "+gradient.attrib["id"]+"\n" for gradient in self.main_window.gradients_to_load])
+            else:
+                teks = "No gradient(s) selected to load. Exiting..."
+            self.main_window.get_object("information_text").set_text(teks)
+            self.main_window.information_dialog.set_title("Load Gradient Information")
+            self.main_window.information_dialog.show_all()
 
         def onRemoveGradientClicked(self, button):
-            self.builder.get_object("information_text").set_text("Clicked from Remove Gradient")
-            self.builder.information_dialog.set_title("Remove Gradient Information")
-            self.builder.information_dialog.show_all()
+            self.main_window.get_object("information_text").set_text("Clicked from Remove Gradient")
+            self.main_window.information_dialog.set_title("Remove Gradient Information")
+            self.main_window.information_dialog.show_all()
 
 
 class GradientSaver(inkex.Effect):
@@ -205,11 +303,18 @@ class GradientSaver(inkex.Effect):
             self.tty = open("/dev/tty", 'w')
         except:
             self.tty = open(os.devnull, 'w')
-        self.doc_gradients = []
+        self.doc_selected_gradients = []
     
+    def insert_new_gradients_to_current_doc(self, gradients):
+        defs_node = self.xpathSingle("//svg:defs")
+        for item in gradients:
+            gradient = etree.SubElement(defs_node,item.tag,attrib=item.attrib)
+            for stop in item:
+                etree.SubElement(gradient,stop.tag,attrib=stop.attrib)
+
     def reload_current_gradients(self, new_data):
         " reload gradients information in current project with stored gradient "
-        for idx,gradient in enumerate(self.doc_gradients):
+        for idx,gradient in enumerate(self.doc_selected_gradients):
             # set old gradient id to new id
             real_node = self.xpathSingle("//*[@id='%s']" % gradient["id"])
             # remove inkscape collect first
@@ -221,7 +326,13 @@ class GradientSaver(inkex.Effect):
             # last set up inkscape collect again
             real_node.attrib["{"+inkex.NSS["inkscape"]+"}collect"] = "always"
 
-    def get_gradients_data(self):
+    def get_all_doc_gradients(self):
+        """TODO
+        retrieve all gradient sources of current project document
+        """
+        pass
+
+    def get_selected_gradients_data(self):
         selected_objects = self.selected
         gradient_list = []
         if len(selected_objects) > 0:
@@ -247,23 +358,13 @@ class GradientSaver(inkex.Effect):
         # read gradients data
         for gradient in gradient_list:
             # parse gradient stops
-            stop_data = {
-                "id": gradient.attrib.get("id"),
-                "stops": []
-            }
-            for stop in gradient:
-                offset = stop.attrib.get("offset")
-                style = simplestyle.parseStyle(stop.attrib['style'])
-                color = simplestyle.parseColor(style.get("stop-color"))
-                opacity = style.get("stop-opacity")
-                stop_data.get("stops").append(
-                    tuple([float(offset)] + [x/256.0 for x in color] + [float(opacity)]))
+            stop_data = read_stop_gradient(gradient)
             data.append(stop_data)
         return data
 
     # called when the extension is running.
     def effect(self):
-        self.doc_gradients = self.get_gradients_data()
+        self.doc_selected_gradients = self.get_selected_gradients_data()
         try:
             app = MainWindow(self)
             Gtk.main()
