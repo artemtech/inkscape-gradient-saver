@@ -9,9 +9,16 @@ Inkscape Gradient Manager for Your Next Project!
 An extension that will help you to organize your gradient on Inkscape. By using Gradient Saver you have ability to save your favorite gradient and reuse it on your next project. Hope it will help much Inkscpae user out there.
 
 ## Dependencies
-- python-gi
-- python-cairo
-- python-gi-cairo
+(Tested in Inkscape 0.92.4 - ArchLinux)
+- ArchLinux  
+ `pacman -S python2-lxml python2-gobject python2-cairo`
+- Debian/Ubuntu  
+ `apt install python-lxml python-gi python-cairo python-gi-cairo`
+- openSUSE (tested in Tumbleweed)  
+ `zypper in python2-lxml python2-gobject-Gdk python2-gobject-cairo python2-gobject python2-pycairo typelib-1_0-Gtk-3_0`  
+
+**NOTE:** in Inkscape 0.92.4 we still using python2 libs. 
+Soon in Inkscape 1.0 it will be using python3 libs. So, please install python3 version of libraries listed above.
 
 ## How to Install
 Copy `gradient_saver.inx` and `gradient_saver` folder into Inkscape `extensions` folder,  
@@ -28,6 +35,7 @@ you can check it from `Edit > Preferences > System` menu, then look at `User ext
 ## Status
 - [x] Saving Gradient
 - [x] Load Gradient 
+- [x] Remove Gradient
 
 ## Contributor
 - [Sofyan Sugianto - sofyan@artemtech.id](mailto://sofyan@artemtech.id) (Programmer)
