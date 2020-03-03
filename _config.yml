@@ -1,1 +1,4 @@
 theme: jekyll-theme-cayman
+show_downloads: true
+github:
+  zip_url: https://github.com/artemtech/inkscape-gradient-saver/releases/download/v0.1.6/inkscape-gradient-saver_0.1.6.zip

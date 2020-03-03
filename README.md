@@ -1,6 +1,6 @@
 <p align="center" class="has-mb-6">
-<img class="not-gallery-item" height="128" src="misc/icon.svg" alt="logo">
-<br><b>Gradient Saver</b></br>
+<img class="not-gallery-item" height="128" src="https://raw.githubusercontent.com/artemtech/inkscape-gradient-saver/gtk3/gradient_saver/icon.svg" alt="logo">
+<br><b>Gradient Saver</b><br>
 <br>
 Inkscape Gradient Manager for Your Next Project!
 <br>
@@ -21,7 +21,7 @@ An extension that will help you to organize your gradient on Inkscape. By using 
 Soon in Inkscape 1.0 it will be using python3 libs. So, please install python3 version of libraries listed above.
 
 ## How to Install
-Copy `savegradients.inx` and `savegradients.py` into Inkscape `extensions` folder,  
+Copy `gradient_saver.inx` and `gradient_saver` folder into Inkscape `extensions` folder,  
 usually in `$HOME/.config/inkscape/extensions` for linux.
 
 Unable to find where is the `extensions` folder for your Inkscape installation?  
