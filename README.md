@@ -45,4 +45,4 @@ you can check it from `Edit > Preferences > System` menu, then look at `User ext
 This project fully supported by Gimpscape Indonesia (The Biggest Indonesia F/LOSS Design Community)
 
 ## Disclaimer & Donation
-This is early development extension. We don't guarantee anything about this extension so please use at your own risk. If you feel helped by this extension, of course you can give us a cup of coffee :")
+This is early development extension. We don't guarantee anything about this extension so please use at your own risk. If you feel helped by this extension, of course you can give us a cup of coffee, please refer to [Dev-Lovers Page](https://devlovers.netlify.com/) :")
