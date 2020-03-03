@@ -1,5 +1,5 @@
 <p align="center" class="has-mb-6">
-<img class="not-gallery-item" height="128" src="https://raw.githubusercontent.com/artemtech/inkscape-gradient-saver/gtk3/gradient_saver/icon.svg" alt="logo">
+<img class="not-gallery-item" height="128" src="../gtk3/gradient_saver/icon.svg" alt="logo">
 <br><b>Gradient Saver</b><br>
 <br>
 Inkscape Gradient Manager for Your Next Project!
