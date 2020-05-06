@@ -12,10 +12,12 @@ An extension that will help you to organize your gradient on Inkscape. By using 
 - (2020-05-06) - Inkscape Gradient Saver now support Inkscape 1.0, [check this out!](./1.0)
 - (2020-03-03) - Initial release
 
-<a class="btn" href="https://github.com/artemtech/inkscape-gradient-saver/releases/download/v0.1.6/inkscape-gradient-saver_0.1.6.zip">Download Gradient Saver for Inkscape 0.9x</a>
+- [Download Gradient Saver for Inkscape 0.9x](https://github.com/artemtech/inkscape-gradient-saver/releases/download/v0.1.6/inkscape-gradient-saver_0.1.6.zip)  
+- [Download Gradient Saver for Inkscape 1.0x](https://github.com/artemtech/inkscape-gradient-saver/releases/download/v1.0.0/inkscape-gradient-saver_1.0.0.zip)
+
 
 ## Dependencies
-(Tested in Inkscape 0.92.4 - ArchLinux)
+(Tested in Inkscape 0.92.4 and 1.0 - ArchLinux)
 - ArchLinux  
  `pacman -S python2-lxml python2-gobject python2-cairo`
 - Debian/Ubuntu  
@@ -23,8 +25,9 @@ An extension that will help you to organize your gradient on Inkscape. By using 
 - openSUSE (tested in Tumbleweed)  
  `zypper in python2-lxml python2-gobject-Gdk python2-gobject-cairo python2-gobject python2-pycairo typelib-1_0-Gtk-3_0`  
 
-**NOTE:** in Inkscape 0.92.4 we still using python2 libs. 
-Soon in Inkscape 1.0 it will be using python3 libs. So, please install python3 version of libraries listed above.
+**NOTE:** 
+- Inkscape 0.92.4 using python2 libs. 
+- Inkscape 1.0 is using python3 libs. So, please install python3 version of libraries listed above.
 
 ## How to Install
 Copy `gradient_saver.inx` and `gradient_saver` folder into Inkscape `extensions` folder,  
