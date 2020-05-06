@@ -311,7 +311,7 @@ class GradientSaver(inkex.Effect):
         self.doc_selected_gradients = []
     
     def insert_new_gradients_to_current_doc(self, gradients):
-        defs_node = self.xpathSingle("//svg:defs")
+        defs_node = self.svg.getElement("//svg:defs")
         for item in gradients:
             gradient = etree.SubElement(defs_node,item.tag,attrib=item.attrib)
             for stop in item:
@@ -321,12 +321,12 @@ class GradientSaver(inkex.Effect):
         " reload gradients information in current project with stored gradient "
         for idx,gradient in enumerate(self.doc_selected_gradients):
             # set old gradient id to new id
-            real_node = self.xpathSingle("//*[@id='%s']" % gradient["id"])
+            real_node = self.svg.getElement("//*[@id='%s']" % gradient["id"])
             # remove inkscape collect first
             real_node.attrib.pop("{"+NSS["inkscape"]+"}collect", None)
             real_node.attrib["id"] = new_data[idx].attrib["id"]
             # set old xlink:href to new id
-            node_href = self.xpathSingle("//*[@xlink:href='#%s']" % gradient["id"])
+            node_href = self.svg.getElement("//*[@xlink:href='#%s']" % gradient["id"])
             node_href.attrib["{"+NSS["xlink"]+"}href"] = "#"+new_data[idx].attrib["id"]
             # last set up inkscape collect again
             real_node.attrib["{"+NSS["inkscape"]+"}collect"] = "always"
