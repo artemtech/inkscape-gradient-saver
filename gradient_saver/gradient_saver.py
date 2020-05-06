@@ -1,30 +1,27 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# inkscape extension files
-import gettext
-import inkex  # required
-import simplestyle
-
 # OS modules
 import os
 import sys
-import cairo
-from lxml import etree
 
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
-_ = gettext.gettext
+# inkscape extension files
+import cairo
+from lxml import etree
+import inkex  # required
+from inkex.utils import NSS
+from inkex.utils import errormsg as show_errormsg
+from inkex.styles import Style
+from inkex.colors import Color
 
-__version__ = '0.1.6'
-
-inkex.localize()
-
+__version__ = '1.0.0'
 
 def create_new_file(gradient_data):
-    root = etree.Element("svg", nsmap=inkex.NSS)
+    root = etree.Element("svg", nsmap=NSS)
     def_tree = etree.SubElement(root, "defs")
     for i, item in enumerate(gradient_data):
         gradient = etree.SubElement(def_tree, item.tag, attrib=item.attrib)
@@ -33,7 +30,6 @@ def create_new_file(gradient_data):
     with open("../my-gradients.svg", "w") as f:
         f.write(etree.tostring(
             root, encoding="utf-8", xml_declaration=True, pretty_print=True))
-
 
 def save_to_file(data):
     """ Wrapper for saving gradients to file. """
@@ -49,19 +45,15 @@ def save_to_file(data):
             return 0
         except Exception as e:
             import traceback
-            inkex.debug(e)
-            inkex.debug(traceback.print_exc())
+            show_errormsg(e)
+            show_errormsg(traceback.print_exc())
             return -1
-
-
-
 
 def load_gradients_from_file():
     """ Load gradients from saved gradient, returned as List """
     if os.path.exists("../my-gradients.svg"):
-        with open("../my-gradients.svg", "r") as f:
-            root = etree.fromstring(f.read())
-        mygradients = root.xpath("//linearGradient", namespaces=inkex.NSS)
+        root = etree.parse("../my-gradients.svg")
+        mygradients = root.xpath("//linearGradient", namespaces=NSS)
     else:
         mygradients = []
     return mygradients
@@ -73,8 +65,8 @@ def read_stop_gradient(gradient):
     }
     for stop in gradient:
         offset = stop.attrib.get("offset")
-        style = simplestyle.parseStyle(stop.attrib['style'])
-        color = simplestyle.parseColor(style.get("stop-color"))
+        style = Style(Style.parse_str(stop.attrib['style']))
+        color = Color.parse_str(style.get("stop-color"))[1]
         opacity = style.get("stop-opacity")
         stop_data.get("stops").append(
             tuple([float(offset)] + [x/256.0 for x in color] + [float(opacity)]))
@@ -156,15 +148,15 @@ class MainWindow(Gtk.Builder):
             for idx, stop in enumerate(self.gradient_data["stops"]):
                 stop_id = self.get_name() + str(idx)
                 offset = stop[0]
-                color = simplestyle.formatColor3f(stop[1], stop[2], stop[3])
+                color = Color([stop[1], stop[2], stop[3]],"rgb")
                 opacity = stop[4]
                 tmp_stops = {
                     "id": stop_id,
                     "offset": str(offset),
-                    "style": simplestyle.formatStyle({
-                        "stop-color": color,
-                        "stop-opacity": str(opacity)
-                    })
+                    "style": Style({
+                                "stop-color": str(color), 
+                                "stop-opacity": str(opacity)
+                            }).to_str()
                 }
                 current_stop = etree.SubElement(root, "stop", attrib=tmp_stops)
             return root
@@ -329,13 +321,13 @@ class GradientSaver(inkex.Effect):
             # set old gradient id to new id
             real_node = self.xpathSingle("//*[@id='%s']" % gradient["id"])
             # remove inkscape collect first
-            real_node.attrib.pop("{"+inkex.NSS["inkscape"]+"}collect", None)
+            real_node.attrib.pop("{"+NSS["inkscape"]+"}collect", None)
             real_node.attrib["id"] = new_data[idx].attrib["id"]
             # set old xlink:href to new id
             node_href = self.xpathSingle("//*[@xlink:href='#%s']" % gradient["id"])
-            node_href.attrib["{"+inkex.NSS["xlink"]+"}href"] = "#"+new_data[idx].attrib["id"]
+            node_href.attrib["{"+NSS["xlink"]+"}href"] = "#"+new_data[idx].attrib["id"]
             # last set up inkscape collect again
-            real_node.attrib["{"+inkex.NSS["inkscape"]+"}collect"] = "always"
+            real_node.attrib["{"+NSS["inkscape"]+"}collect"] = "always"
 
     def get_all_doc_gradients(self):
         """TODO
@@ -344,25 +336,25 @@ class GradientSaver(inkex.Effect):
         pass
 
     def get_selected_gradients_data(self):
-        selected_objects = self.selected
+        selected_objects = self.svg.selected
         gradient_list = []
         if len(selected_objects) > 0:
             for item in selected_objects:
-                style = simplestyle.parseStyle(selected_objects.get(item).attrib['style'])
+                style = Style(Style.parse_str(selected_objects.get(item).get('style')))
                 fill = style["fill"][5:-1] if "url" in style["fill"] else "None"
                 stroke = style["stroke"][5:-1] if "url" in style["stroke"] else "None"
                 if fill == "None" and stroke == "None":
                     continue
                 # read fill data
                 if "radialGradient" in fill or "linearGradient" in fill:
-                    real_fill = self.getElementById(fill).attrib["{"+inkex.NSS["xlink"]+"}href"][1:]
-                    real_fill_node = self.getElementById(real_fill)
+                    real_fill = self.svg.getElementById(fill).attrib["{"+NSS["xlink"]+"}href"][1:]
+                    real_fill_node = self.svg.getElementById(real_fill)
                     if real_fill_node not in gradient_list:
                         gradient_list.append(real_fill_node)
                 # read stroke data
                 if "radialGradient" in stroke or "linearGradient" in stroke:
-                    real_stroke = self.getElementById(stroke).attrib["{"+inkex.NSS["xlink"]+"}href"][1:]
-                    real_stroke_node = self.getElementById(real_stroke)
+                    real_stroke = self.svg.getElementById(stroke).attrib["{"+NSS["xlink"]+"}href"][1:]
+                    real_stroke_node = self.svg.getElementById(real_stroke)
                     if real_stroke_node not in gradient_list:
                         gradient_list.append(real_stroke_node)
         data = []
@@ -381,10 +373,10 @@ class GradientSaver(inkex.Effect):
             Gtk.main()
         except Exception as e:
             import traceback
-            inkex.debug(e)
-            inkex.debug(traceback.print_exc())
+            show_errormsg(e)
+            show_errormsg(traceback.print_exc())
 
 
 if __name__ == '__main__':
     e = GradientSaver()
-    e.affect()
+    e.run()
