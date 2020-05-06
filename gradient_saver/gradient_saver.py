@@ -341,8 +341,10 @@ class GradientSaver(inkex.Effect):
         if len(selected_objects) > 0:
             for item in selected_objects:
                 style = Style(Style.parse_str(selected_objects.get(item).get('style')))
-                fill = style["fill"][5:-1] if "url" in style["fill"] else "None"
-                stroke = style["stroke"][5:-1] if "url" in style["stroke"] else "None"
+                if style.get("fill"):
+                    fill = style.get("fill")[5:-1] if "url" in style.get("fill") else "None"
+                if style.get("stroke"):
+                    stroke = style("stroke")[5:-1] if "url" in style.get("stroke") else "None"
                 if fill == "None" and stroke == "None":
                     continue
                 # read fill data
