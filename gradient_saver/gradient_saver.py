@@ -20,7 +20,7 @@ from inkex.colors import Color
 
 __version__ = '1.0.0'
 
-saved_gradient_path = "../my-gradient.svg"
+saved_gradient_path = "../my-gradients.svg"
 
 def create_new_file(gradient_data):
     root = etree.Element("svg", nsmap=NSS)
@@ -343,6 +343,7 @@ class GradientSaver(inkex.Effect):
         if len(selected_objects) > 0:
             for item in selected_objects:
                 style = Style(Style.parse_str(selected_objects.get(item).get('style')))
+                fill = stroke = "None"
                 if style.get("fill"):
                     fill = style.get("fill")[5:-1] if "url" in style.get("fill") else "None"
                 if style.get("stroke"):
