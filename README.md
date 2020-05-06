@@ -9,7 +9,7 @@ Inkscape Gradient Manager for Your Next Project!
 An extension that will help you to organize your gradient on Inkscape. By using Gradient Saver you have ability to save your favorite gradient and reuse it on your next project. Hope it will help much Inkscape user out there.
 
 ## NEWS!! ##
-- (2020-05-06) - Inkscape Gradient Saver now support Inkscape 1.0, [check this out!](./1.0)
+- (2020-05-06) - Inkscape Gradient Saver now support Inkscape 1.0
 - (2020-03-03) - Initial release
 
 - [Download Gradient Saver for Inkscape 0.9x](https://github.com/artemtech/inkscape-gradient-saver/releases/download/v0.1.6/inkscape-gradient-saver_0.1.6.zip)  
