@@ -20,6 +20,8 @@ from inkex.colors import Color
 
 __version__ = '1.0.0'
 
+saved_gradient_path = "../my-gradient.svg"
+
 def create_new_file(gradient_data):
     root = etree.Element("svg", nsmap=NSS)
     def_tree = etree.SubElement(root, "defs")
@@ -27,9 +29,9 @@ def create_new_file(gradient_data):
         gradient = etree.SubElement(def_tree, item.tag, attrib=item.attrib)
         for j, gradient_stop in enumerate(item):
             etree.SubElement(gradient, gradient_stop.tag, attrib=gradient_stop.attrib, id="stop%d%d" % (i, j))
-    with open("../my-gradients.svg", "w") as f:
+    with open(saved_gradient_path, "w") as f:
         f.write(etree.tostring(
-            root, encoding="utf-8", xml_declaration=True, pretty_print=True))
+            root, encoding="utf-8", xml_declaration=True, pretty_print=True).decode("utf-8"))
 
 def save_to_file(data):
     """ Wrapper for saving gradients to file. """
@@ -38,7 +40,7 @@ def save_to_file(data):
     else:
         try:
             # read previous data then append it with current data
-            if os.path.exists("../my-gradients.svg"):
+            if os.path.exists(saved_gradient_path):
                 previous_data = load_gradients_from_file()
                 data = previous_data + data
             create_new_file(data)
@@ -51,8 +53,8 @@ def save_to_file(data):
 
 def load_gradients_from_file():
     """ Load gradients from saved gradient, returned as List """
-    if os.path.exists("../my-gradients.svg"):
-        root = etree.parse("../my-gradients.svg")
+    if os.path.exists(saved_gradient_path) and os.stat(saved_gradient_path).st_size != 0:
+        root = etree.parse(saved_gradient_path)
         mygradients = root.xpath("//linearGradient", namespaces=NSS)
     else:
         mygradients = []
