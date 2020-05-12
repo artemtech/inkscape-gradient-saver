@@ -30,11 +30,6 @@ An extension that will help you to organize your gradient on Inkscape. By using 
 - Inkscape 0.92.4 using python2 libs. 
 - Inkscape 1.0 is using python3 libs. So, please install python3 version of libraries listed above.
 
-**NOTE2:** 
-- If you want to use python3 as main interpreter for Inkscape 0.92x, you can set it manually in preferences.xml
-as described in [this link](https://wiki.inkscape.org/wiki/index.php?title=Extension_Interpreters#Selecting_a_specific_interpreter_version_.28via_preferences_file.29).
-- Then install required python3 version of dependencies listed above
-
 ## How to Install
 Copy `gradient_saver.inx` and `gradient_saver` folder into Inkscape `extensions` folder,  
 usually in `$HOME/.config/inkscape/extensions` for linux.
