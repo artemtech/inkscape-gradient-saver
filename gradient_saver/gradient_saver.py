@@ -18,7 +18,7 @@ from gi.repository import Gtk
 
 _ = gettext.gettext
 
-__version__ = '0.1.6'
+__version__ = '0.1.7'
 
 inkex.localize()
 
@@ -52,9 +52,6 @@ def save_to_file(data):
             inkex.debug(e)
             inkex.debug(traceback.print_exc())
             return -1
-
-
-
 
 def load_gradients_from_file():
     """ Load gradients from saved gradient, returned as List """
@@ -349,8 +346,11 @@ class GradientSaver(inkex.Effect):
         if len(selected_objects) > 0:
             for item in selected_objects:
                 style = simplestyle.parseStyle(selected_objects.get(item).attrib['style'])
-                fill = style["fill"][5:-1] if "url" in style["fill"] else "None"
-                stroke = style["stroke"][5:-1] if "url" in style["stroke"] else "None"
+                fill = stroke = "None"
+                if style.get("fill"):
+                    fill = style["fill"][5:-1] if "url" in style["fill"] else "None"
+                if style.get("stroke"):
+                    stroke = style["stroke"][5:-1] if "url" in style["stroke"] else "None"
                 if fill == "None" and stroke == "None":
                     continue
                 # read fill data
