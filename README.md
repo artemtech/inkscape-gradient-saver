@@ -9,10 +9,11 @@ Inkscape Gradient Manager for Your Next Project!
 An extension that will help you to organize your gradient on Inkscape. By using Gradient Saver you have ability to save your favorite gradient and reuse it on your next project. Hope it will help much Inkscape user out there.
 
 ## NEWS!! ##
+- (2020-05-12) - Fix bug stroke/fill unset in 0.92.x
 - (2020-05-06) - Inkscape Gradient Saver now support Inkscape 1.0
 - (2020-03-03) - Initial release
 
-- [Download Gradient Saver for Inkscape 0.9x](https://github.com/artemtech/inkscape-gradient-saver/releases/download/v0.1.6/inkscape-gradient-saver_0.1.6.zip)  
+- [Download Gradient Saver for Inkscape 0.9x](https://github.com/artemtech/inkscape-gradient-saver/releases/download/v0.1.7/inkscape-gradient-saver_0.1.7.zip)  
 - [Download Gradient Saver for Inkscape 1.0x](https://github.com/artemtech/inkscape-gradient-saver/releases/download/v1.0.0/inkscape-gradient-saver_1.0.0.zip)
 
 
@@ -28,6 +29,11 @@ An extension that will help you to organize your gradient on Inkscape. By using 
 **NOTE:** 
 - Inkscape 0.92.4 using python2 libs. 
 - Inkscape 1.0 is using python3 libs. So, please install python3 version of libraries listed above.
+
+**NOTE2:** 
+- If you want to use python3 as main interpreter for Inkscape 0.92x, you can set it manually in preferences.xml
+as described in [this link](https://wiki.inkscape.org/wiki/index.php?title=Extension_Interpreters#Selecting_a_specific_interpreter_version_.28via_preferences_file.29).
+- Then install required python3 version of dependencies listed above
 
 ## How to Install
 Copy `gradient_saver.inx` and `gradient_saver` folder into Inkscape `extensions` folder,  
