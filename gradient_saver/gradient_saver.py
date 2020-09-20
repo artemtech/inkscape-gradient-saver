@@ -18,7 +18,7 @@ from inkex.utils import errormsg as show_errormsg
 from inkex.styles import Style
 from inkex.colors import Color
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 saved_gradient_path = "../my-gradients.svg"
 
@@ -341,8 +341,8 @@ class GradientSaver(inkex.Effect):
         selected_objects = self.svg.selected
         gradient_list = []
         if len(selected_objects) > 0:
-            for item in selected_objects:
-                style = Style(Style.parse_str(selected_objects.get(item).get('style')))
+            for item in selected_objects.values():
+                style = Style(Style.parse_str(item.get('style')))
                 fill = stroke = "None"
                 if style.get("fill"):
                     fill = style.get("fill")[5:-1] if "url" in style.get("fill") else "None"
