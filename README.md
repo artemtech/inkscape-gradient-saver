@@ -16,7 +16,7 @@ An extension that will help you to organize your gradient on Inkscape. By using 
 - (2020-03-03) - Initial release
 
 - [Download Gradient Saver for Inkscape 0.9x](https://github.com/artemtech/inkscape-gradient-saver/releases/download/v0.1.7/inkscape-gradient-saver_0.1.7.zip)  
-- [Download Gradient Saver for Inkscape 1.0x](https://github.com/artemtech/inkscape-gradient-saver/releases/download/v1.0.2/inkscape-gradient-saver_1.0.2.zip)
+- [Download Gradient Saver for Inkscape 1.0+](https://github.com/artemtech/inkscape-gradient-saver/releases/download/v1.0.2/inkscape-gradient-saver_1.0.2.zip)
 
 
 ## Dependencies
@@ -30,7 +30,7 @@ An extension that will help you to organize your gradient on Inkscape. By using 
 
 **NOTE:** 
 - Inkscape 0.92.4 using python2 libs. 
-- Inkscape 1.0 is using python3 libs. So, please install python3 version of libraries listed above.
+- Inkscape 1.0+ is using python3 libs. So, please install python3 version of libraries listed above.
 
 ## How to Install
 Copy `gradient_saver.inx` and `gradient_saver` folder into Inkscape `extensions` folder,  
