@@ -171,7 +171,7 @@
                     <property name="margin_right">30</property>
                     <property name="margin_top">14</property>
                     <property name="label" translatable="yes">&lt;b&gt;Hint:&lt;/b&gt;
-Select at least one object  that use gradient color  in order to add those gradient to your library. Selected gradient object  will appear below. You can give a name for your gradients to help you recoginize it later.</property>
+Select at least one object  that use gradient color  in order to add those gradient to your library. Selected gradient object  will appear below. You can give a name for your gradients to help you recognize it later.</property>
                     <property name="use_markup">True</property>
                     <property name="wrap">True</property>
                   </object>
