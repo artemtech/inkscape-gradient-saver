@@ -9,13 +9,14 @@ Inkscape Gradient Manager for Your Next Project!
 An extension that will help you to organize your gradient on Inkscape. By using Gradient Saver you have ability to save your favorite gradient and reuse it on your next project. Hope it will help much Inkscape user out there.
 
 ## NEWS!! ##
+- (2021-05-27) - Add Inkscape 1.1 support
 - (2020-09-20) - Fix bug when creating new gradient in Inkscape 1.0.1
 - (2020-05-12) - Fix bug stroke/fill unset in 0.92.x
 - (2020-05-06) - Inkscape Gradient Saver now support Inkscape 1.0
 - (2020-03-03) - Initial release
 
 - [Download Gradient Saver for Inkscape 0.9x](https://github.com/artemtech/inkscape-gradient-saver/releases/download/v0.1.7/inkscape-gradient-saver_0.1.7.zip)  
-- [Download Gradient Saver for Inkscape 1.0x](https://github.com/artemtech/inkscape-gradient-saver/releases/download/v1.0.1/inkscape-gradient-saver_1.0.1.zip)
+- [Download Gradient Saver for Inkscape 1.0x](https://github.com/artemtech/inkscape-gradient-saver/releases/download/v1.0.2/inkscape-gradient-saver_1.0.2.zip)
 
 
 ## Dependencies
@@ -56,4 +57,4 @@ you can check it from `Edit > Preferences > System` menu, then look at `User ext
 This project fully supported by Gimpscape Indonesia (The Biggest Indonesia F/LOSS Design Community)
 
 ## Disclaimer & Donation
-This is early development extension. We don't guarantee anything about this extension so please use at your own risk. If you feel helped by this extension, of course you can give us a cup of coffee, please refer to [Dev-Lovers Page](https://devlovers.netlify.com/) :")
+This is early development extension. We don't guarantee anything about this extension so please use at your own risk. If you feel helped by this extension, of course you can give us a cup of coffee, please refer to [Dev-Lovers Page](https://support.dev-is.my.id/index-en.html) :")
