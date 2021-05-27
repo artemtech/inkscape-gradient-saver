@@ -21,7 +21,7 @@ try:
 except ImportError:
     from inkex.utils import NSS
 
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 saved_gradient_path = "../my-gradients.svg"
 
