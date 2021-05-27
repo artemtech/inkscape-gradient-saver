@@ -13,10 +13,13 @@ from gi.repository import Gtk
 import cairo
 from lxml import etree
 import inkex  # required
-from inkex.utils import NSS
 from inkex.utils import errormsg as show_errormsg
 from inkex.styles import Style
 from inkex.colors import Color
+try:
+    from inkex.elements._utils import NSS
+except ImportError:
+    from inkex.utils import NSS
 
 __version__ = '1.0.1'
 
