@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
 	<!-- _name must have same name as .py file but capitalise it. Shows on Menu this way-->
-	<_name>Gradient Saver</_name>
+	<name>Gradient Saver</name>
 	<!-- id should be unique. Associates entered values with this menu -->
 	<id>id.artemtech.gradient_saver</id>
 	<!-- mention a dependency here and will check for existence (optional)-->
-	<dependency type="executable" location="extensions">gradient_saver/gradient_saver.py</dependency>
+	<dependency type="executable" location="inx">gradient_saver/gradient_saver.py</dependency>
 	<!-- classify which menu it appears under - can be new name -->
 	<effect>
 	<object-type>all</object-type>
 	</effect>
 	<!-- py file again -->
 	<script>
-		<command reldir="extensions" interpreter="python">gradient_saver/gradient_saver.py</command>
+		<command location="inx" interpreter="python">gradient_saver/gradient_saver.py</command>
 	</script>
 </inkscape-extension>
