@@ -23,7 +23,7 @@ except ImportError:
 
 __version__ = '1.0.2'
 
-saved_gradient_path = "../my-gradients.svg"
+saved_gradient_path = os.path.join(os.getenv('INKSCAPE_PROFILE_DIR'), "my-gradients.svg")
 
 def create_new_file(gradient_data):
     root = etree.Element("svg", nsmap=NSS)
@@ -60,7 +60,12 @@ def load_gradients_from_file():
         root = etree.parse(saved_gradient_path)
         mygradients = root.xpath("//linearGradient", namespaces=NSS)
     else:
-        mygradients = []
+        try:
+            old_saved_gradient_path = os.path.join(os.getenv('INKSCAPE_PROFILE_DIR'), "extensions", "my-gradients.svg")
+            root = etree.parse(old_saved_gradient_path)
+            mygradients = root.xpath("//linearGradient", namespaces=NSS)
+        except:
+            mygradients = []
     return mygradients
 
 def read_stop_gradient(gradient):
